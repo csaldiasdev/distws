@@ -42,9 +42,11 @@ func TestDataReplication(t *testing.T) {
 
 	userId := uuid.New()
 
-	assert.NoError(t, repoOne.Insert(userId, repoOneId))
-	assert.NoError(t, repoTwo.Insert(userId, repoTwoId))
-	assert.NoError(t, repoThree.Insert(userId, repoThreeId))
+	connId := uuid.New()
+
+	assert.NoError(t, repoOne.Insert(uuid.New(), userId, repoOneId))
+	assert.NoError(t, repoTwo.Insert(connId, userId, repoTwoId))
+	assert.NoError(t, repoThree.Insert(uuid.New(), userId, repoThreeId))
 
 	time.Sleep(time.Second * 2)
 
@@ -55,4 +57,16 @@ func TestDataReplication(t *testing.T) {
 	assert.Equal(t, 3, len(foundOne))
 	assert.Equal(t, 3, len(foundTwo))
 	assert.Equal(t, 3, len(founoThree))
+
+	assert.NoError(t, repoThree.DeleteConnection(connId))
+
+	time.Sleep(time.Millisecond * 500)
+
+	foundOne, _ = repoOne.GetByUserId(userId)
+	foundTwo, _ = repoTwo.GetByUserId(userId)
+	founoThree, _ = repoThree.GetByUserId(userId)
+
+	assert.Equal(t, 2, len(foundOne))
+	assert.Equal(t, 2, len(foundTwo))
+	assert.Equal(t, 2, len(founoThree))
 }
