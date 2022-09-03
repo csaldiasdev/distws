@@ -16,8 +16,13 @@ type CommandPayload struct {
 }
 
 type ElementValue struct {
-	UserId uuid.UUID
-	NodeId uuid.UUID
+	ConnectionId uuid.UUID
+	UserId       uuid.UUID
+	NodeId       uuid.UUID
+}
+
+type DeleteConnectionValue struct {
+	ConnectionId uuid.UUID
 }
 
 type DeleteAllValue struct {

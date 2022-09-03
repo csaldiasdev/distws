@@ -44,9 +44,12 @@ func TestSendDataViaRpc(t *testing.T) {
 
 	assert.NoError(t, err)
 
+	userId := uuid.New()
+
 	ev := fsm.ElementValue{
-		UserId: uuid.New(),
-		NodeId: nodeId,
+		ConnectionId: uuid.New(),
+		UserId:       userId,
+		NodeId:       nodeId,
 	}
 
 	evBytes, _ := json.Marshal(ev)
@@ -60,7 +63,7 @@ func TestSendDataViaRpc(t *testing.T) {
 
 	cli.RaftApplyCommand(data)
 
-	found, _ := memoryDb.GetByNodeId(nodeId)
+	found, _ := memoryDb.GetByUserId(userId)
 
 	assert.NotEmpty(t, len(found))
 }

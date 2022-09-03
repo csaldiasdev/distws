@@ -19,10 +19,9 @@ import (
 )
 
 type Repository interface {
-	GetByUserId(id uuid.UUID) ([]model.UserNode, error)
-	GetByNodeId(id uuid.UUID) ([]model.UserNode, error)
-	Insert(userId uuid.UUID, nodeId uuid.UUID) error
-	DeleteUserWithNode(userId uuid.UUID, nodeId uuid.UUID) error
+	GetByUserId(id uuid.UUID) ([]model.Connection, error)
+	Insert(connectionId uuid.UUID, userId uuid.UUID, nodeId uuid.UUID) error
+	DeleteConnection(connectionId uuid.UUID) error
 	DeleteAllInNode(nodeId uuid.UUID) error
 	AddNode(nodeId string, ip string, raftPort uint, rpcPort uint) error
 }
@@ -35,21 +34,18 @@ type inMemoryRepository struct {
 	rpcNodes map[string]*client.RepositoryRpcClient
 }
 
-func (r *inMemoryRepository) GetByUserId(id uuid.UUID) ([]model.UserNode, error) {
+func (r *inMemoryRepository) GetByUserId(id uuid.UUID) ([]model.Connection, error) {
 	return r.memoryDb.GetByUserId(id)
 }
 
-func (r *inMemoryRepository) GetByNodeId(id uuid.UUID) ([]model.UserNode, error) {
-	return r.memoryDb.GetByNodeId(id)
-}
-
-func (r *inMemoryRepository) Insert(userId uuid.UUID, nodeId uuid.UUID) error {
+func (r *inMemoryRepository) Insert(connectionId uuid.UUID, userId uuid.UUID, nodeId uuid.UUID) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	ev := fsm.ElementValue{
-		UserId: userId,
-		NodeId: nodeId,
+		ConnectionId: connectionId,
+		UserId:       userId,
+		NodeId:       nodeId,
 	}
 
 	evBytes, _ := json.Marshal(ev)
@@ -73,13 +69,12 @@ func (r *inMemoryRepository) Insert(userId uuid.UUID, nodeId uuid.UUID) error {
 	return rpcNode.RaftApplyCommand(data)
 }
 
-func (r *inMemoryRepository) DeleteUserWithNode(userId uuid.UUID, nodeId uuid.UUID) error {
+func (r *inMemoryRepository) DeleteConnection(connectionId uuid.UUID) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	ev := fsm.ElementValue{
-		UserId: userId,
-		NodeId: nodeId,
+	ev := fsm.DeleteConnectionValue{
+		ConnectionId: connectionId,
 	}
 
 	evBytes, _ := json.Marshal(ev)

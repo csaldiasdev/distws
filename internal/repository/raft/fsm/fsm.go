@@ -35,13 +35,13 @@ func (i fsm) Apply(log *raft.Log) interface{} {
 			}
 
 			return &ApplyResponse{
-				Error: i.db.Insert(ieValue.UserId, ieValue.NodeId),
+				Error: i.db.Insert(ieValue.ConnectionId, ieValue.UserId, ieValue.NodeId),
 				Data:  ieValue,
 			}
 
 		case DeleteElement:
 
-			var deValue = ElementValue{}
+			var deValue = DeleteConnectionValue{}
 
 			if err := json.Unmarshal(command.Value, &deValue); err != nil {
 				fmt.Fprint(os.Stderr, "[DeleteElement] error marshalling command value struct")
@@ -49,7 +49,7 @@ func (i fsm) Apply(log *raft.Log) interface{} {
 			}
 
 			return &ApplyResponse{
-				Error: i.db.DeleteUserWithNode(deValue.UserId, deValue.NodeId),
+				Error: i.db.DeleteConnection(deValue.ConnectionId),
 				Data:  deValue,
 			}
 
@@ -105,7 +105,7 @@ func (i fsm) Restore(rClose io.ReadCloser) error {
 			return nil
 		}
 
-		if err := i.db.Insert(ieValue.UserId, ieValue.NodeId); err != nil {
+		if err := i.db.Insert(ieValue.ConnectionId, ieValue.UserId, ieValue.NodeId); err != nil {
 			return err
 		}
 

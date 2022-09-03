@@ -1,6 +1,6 @@
 package model
 
-type UserNode struct {
+type Connection struct {
 	Id     string
 	UserId string
 	NodeId string

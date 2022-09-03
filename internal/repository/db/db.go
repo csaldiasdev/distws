@@ -5,64 +5,46 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-memdb"
-	"github.com/samber/lo"
 )
 
 const (
-	userNodeTableName = "userNode"
-	userIdIndexName   = "userId"
-	userIdFieldName   = "UserId"
-	nodeIdIndexName   = "nodeId"
-	nodeIdFieldName   = "NodeId"
+	connectionTableName = "connection"
+	idIndexName         = "id"
+	idIndexFieldName    = "Id"
+	userIdIndexName     = "userId"
+	userIdFieldName     = "UserId"
+	nodeIdIndexName     = "nodeId"
+	nodeIdFieldName     = "NodeId"
 )
 
 type MemoryDb struct {
 	database *memdb.MemDB
 }
 
-func (m *MemoryDb) GetByUserId(id uuid.UUID) ([]model.UserNode, error) {
+func (m *MemoryDb) GetByUserId(id uuid.UUID) ([]model.Connection, error) {
 	txn := m.database.Txn(false)
 
-	it, err := txn.Get(userNodeTableName, userIdIndexName, id.String())
+	it, err := txn.Get(connectionTableName, userIdIndexName, id.String())
 
 	if err != nil {
 		return nil, err
 	}
 
-	result := make([]model.UserNode, 0)
+	result := make([]model.Connection, 0)
 
 	for obj := it.Next(); obj != nil; obj = it.Next() {
-		nodeRep := obj.(model.UserNode)
+		nodeRep := obj.(model.Connection)
 		result = append(result, nodeRep)
 	}
 
 	return result, nil
 }
 
-func (m *MemoryDb) GetByNodeId(id uuid.UUID) ([]model.UserNode, error) {
-	txn := m.database.Txn(false)
-
-	it, err := txn.Get(userNodeTableName, nodeIdIndexName, id.String())
-
-	if err != nil {
-		return nil, err
-	}
-
-	result := make([]model.UserNode, 0)
-
-	for obj := it.Next(); obj != nil; obj = it.Next() {
-		nodeRep := obj.(model.UserNode)
-		result = append(result, nodeRep)
-	}
-
-	return result, nil
-}
-
-func (m *MemoryDb) Insert(userId uuid.UUID, nodeId uuid.UUID) error {
+func (m *MemoryDb) Insert(connectionId uuid.UUID, userId uuid.UUID, nodeId uuid.UUID) error {
 	txn := m.database.Txn(true)
 
-	err := txn.Insert(userNodeTableName, model.UserNode{
-		Id:     uuid.NewString(),
+	err := txn.Insert(connectionTableName, model.Connection{
+		Id:     connectionId.String(),
 		UserId: userId.String(),
 		NodeId: nodeId.String(),
 	})
@@ -76,25 +58,14 @@ func (m *MemoryDb) Insert(userId uuid.UUID, nodeId uuid.UUID) error {
 	return nil
 }
 
-func (m *MemoryDb) DeleteUserWithNode(userId uuid.UUID, nodeId uuid.UUID) error {
-	users, err := m.GetByUserId(userId)
-
-	if err != nil {
-		return err
-	}
-
+func (m *MemoryDb) DeleteConnection(connectionId uuid.UUID) error {
 	txn := m.database.Txn(true)
 
-	listToDelete := lo.Filter(users, func(u model.UserNode, _ int) bool {
-		return u.NodeId == nodeId.String()
-	})
+	_, err := txn.DeleteAll(connectionTableName, idIndexName, connectionId.String())
 
-	for _, v := range listToDelete {
-		err := txn.Delete(userNodeTableName, v)
-		if err != nil {
-			txn.Abort()
-			return err
-		}
+	if err != nil {
+		txn.Abort()
+		return err
 	}
 
 	txn.Commit()
@@ -104,7 +75,7 @@ func (m *MemoryDb) DeleteUserWithNode(userId uuid.UUID, nodeId uuid.UUID) error 
 func (m *MemoryDb) DeleteAllInNode(nodeId uuid.UUID) error {
 	txn := m.database.Txn(true)
 
-	_, err := txn.DeleteAll(userNodeTableName, nodeIdIndexName, nodeId.String())
+	_, err := txn.DeleteAll(connectionTableName, nodeIdIndexName, nodeId.String())
 
 	if err != nil {
 		txn.Abort()
@@ -118,13 +89,13 @@ func (m *MemoryDb) DeleteAllInNode(nodeId uuid.UUID) error {
 func NewDb() *MemoryDb {
 	schema := &memdb.DBSchema{
 		Tables: map[string]*memdb.TableSchema{
-			userNodeTableName: {
-				Name: userNodeTableName,
+			connectionTableName: {
+				Name: connectionTableName,
 				Indexes: map[string]*memdb.IndexSchema{
-					"id": {
-						Name:    "id",
+					idIndexName: {
+						Name:    idIndexName,
 						Unique:  true,
-						Indexer: &memdb.StringFieldIndex{Field: "Id"},
+						Indexer: &memdb.StringFieldIndex{Field: idIndexFieldName},
 					},
 					userIdIndexName: {
 						Name:    userIdIndexName,
