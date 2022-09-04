@@ -20,7 +20,5 @@ func NewRepositoryRpcClient(addr string) (*RepositoryRpcClient, error) {
 		return nil, err
 	}
 
-	return &RepositoryRpcClient{
-		rpcClient: client,
-	}, nil
+	return &RepositoryRpcClient{rpcClient: client}, nil
 }

@@ -46,6 +46,8 @@ func ListenAndServeRepositoryRpc(port uint, raft *raft.Raft) {
 		raft: raft,
 	}
 
-	rpc.Register(&rRpc)
-	rpc.Accept(inbound)
+	nRpc := rpc.NewServer()
+
+	nRpc.Register(&rRpc)
+	nRpc.Accept(inbound)
 }
