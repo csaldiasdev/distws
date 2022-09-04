@@ -13,16 +13,18 @@ import (
 const nodePropsKey = "node_props"
 
 type config struct {
-	NodePort       int
+	NodePort       uint
+	NodeIp         string
 	Tags           map[string]string
 	StartJoinAddrs []string
 }
 
 type NodeProps struct {
-	NodeIp   string    `json:"node_ip"`
-	NodeId   uuid.UUID `json:"node_id"`
-	GrpcPort int       `json:"grpc_port"`
-	RaftPort int       `json:"raft_port"`
+	NodeIp            string    `json:"node_ip"`
+	NodeId            uuid.UUID `json:"node_id"`
+	RepositoryRpcPort uint      `json:"repository_rpc_port"`
+	HubRpcPort        uint      `json:"hub_rpc_port"`
+	RaftPort          uint      `json:"raft_port"`
 }
 
 type Membership struct {
@@ -89,7 +91,7 @@ func (m *Membership) eventHandler() {
 }
 
 func (m *Membership) setupSerf() (err error) {
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("127.0.0.1:%d", m.NodePort))
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", m.NodeIp, m.NodePort))
 
 	if err != nil {
 		return err
@@ -124,7 +126,7 @@ func (m *Membership) setupSerf() (err error) {
 	return nil
 }
 
-func NewMembership(nodePort int, props NodeProps, handleJoinFunc func(*NodeProps), handleLeaveFunc func(*NodeProps), StartJoinAddrs ...string) (*Membership, error) {
+func NewMembership(nodePort uint, props NodeProps, handleJoinFunc func(*NodeProps), handleLeaveFunc func(*NodeProps), StartJoinAddrs ...string) (*Membership, error) {
 
 	bytesProps, _ := json.Marshal(props)
 
@@ -133,6 +135,7 @@ func NewMembership(nodePort int, props NodeProps, handleJoinFunc func(*NodeProps
 	c := &Membership{
 		config: config{
 			NodePort:       nodePort,
+			NodeIp:         props.NodeIp,
 			Tags:           map[string]string{nodePropsKey: sEnc},
 			StartJoinAddrs: StartJoinAddrs,
 		},

@@ -26,7 +26,7 @@ func TestSendDataViaRpc(t *testing.T) {
 
 	os.MkdirAll(baseFolder, 0777)
 
-	r, _ := stateRaft.NewRaftServer(nodeId.String(), baseFolder, 5000, memoryDb)
+	r, _ := stateRaft.NewRaftServer(nodeId.String(), "localhost", baseFolder, 5000, memoryDb)
 
 	time.Sleep(time.Second * 2)
 
@@ -36,7 +36,7 @@ func TestSendDataViaRpc(t *testing.T) {
 
 	defer os.RemoveAll(baseFolder)
 
-	go server.ListenAndServeRepositoryRpc(5001, r)
+	go server.ListenAndServeRepositoryRpc("localhost", 5001, r)
 
 	time.Sleep(time.Millisecond * 500)
 

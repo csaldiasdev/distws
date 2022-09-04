@@ -31,8 +31,8 @@ func (r *RepositoryRpc) RaftApplyCommandHandler(data []byte, ack *bool) error {
 	return nil
 }
 
-func ListenAndServeRepositoryRpc(port uint, raft *raft.Raft) {
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("localhost:%d", port))
+func ListenAndServeRepositoryRpc(ip string, port uint, raft *raft.Raft) {
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", ip, port))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,6 +46,8 @@ func ListenAndServeRepositoryRpc(port uint, raft *raft.Raft) {
 		raft: raft,
 	}
 
-	rpc.Register(&rRpc)
-	rpc.Accept(inbound)
+	nRpc := rpc.NewServer()
+
+	nRpc.Register(&rRpc)
+	nRpc.Accept(inbound)
 }

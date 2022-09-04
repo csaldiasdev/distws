@@ -13,17 +13,17 @@ func TestDataReplication(t *testing.T) {
 	defer os.RemoveAll("raft-data")
 
 	repoOneId := uuid.New()
-	repoOne, err := NewRepository(repoOneId.String(), 5001, 5002)
+	repoOne, err := NewRepository(repoOneId.String(), "localhost", 5001, 5002)
 
 	assert.NoError(t, err)
 
 	repoTwoId := uuid.New()
-	repoTwo, err := NewRepository(repoTwoId.String(), 6001, 6002)
+	repoTwo, err := NewRepository(repoTwoId.String(), "localhost", 6001, 6002)
 
 	assert.NoError(t, err)
 
 	repoThreeId := uuid.New()
-	repoThree, err := NewRepository(repoThreeId.String(), 7001, 7002)
+	repoThree, err := NewRepository(repoThreeId.String(), "localhost", 7001, 7002)
 
 	assert.NoError(t, err)
 

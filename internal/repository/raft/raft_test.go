@@ -24,7 +24,7 @@ func TestCreateRaftServer(t *testing.T) {
 	defer os.Remove(serverOneDataFolder)
 
 	db := db.NewDb()
-	svr, err := NewRaftServer(serverOneId, serverOneDataFolder, 9001, db)
+	svr, err := NewRaftServer(serverOneId, serverOneDataFolder, "localhost", 9001, db)
 
 	time.Sleep(time.Second * 2)
 
@@ -70,14 +70,14 @@ func TestCreateRaftCluster(t *testing.T) {
 	serverFourRepo := db.NewDb()
 	serverFiveRepo := db.NewDb()
 
-	serverOne, _ := NewRaftServer(serverOneId, serverOneDataFolder, 9001, serverOneRepo)
+	serverOne, _ := NewRaftServer(serverOneId, serverOneDataFolder, "localhost", 9001, serverOneRepo)
 
 	time.Sleep(time.Second * 2)
 
-	NewRaftServer(serverTwoId, serverTwoDataFolder, 9002, serverTwoRepo)
-	NewRaftServer(serverThreeId, serverThreeDataFolder, 9003, serverThreeRepo)
-	NewRaftServer(serverFourId, serverFourDataFolder, 9004, serverFourRepo)
-	NewRaftServer(serverFiveId, serverFiveDataFolder, 9005, serverFiveRepo)
+	NewRaftServer(serverTwoId, serverTwoDataFolder, "localhost", 9002, serverTwoRepo)
+	NewRaftServer(serverThreeId, serverThreeDataFolder, "localhost", 9003, serverThreeRepo)
+	NewRaftServer(serverFourId, serverFourDataFolder, "localhost", 9004, serverFourRepo)
+	NewRaftServer(serverFiveId, serverFiveDataFolder, "localhost", 9005, serverFiveRepo)
 
 	f := serverOne.AddVoter(raft.ServerID(serverTwoId), raft.ServerAddress("localhost:9002"), 0, 0)
 
@@ -128,14 +128,14 @@ func TestReplicateData(t *testing.T) {
 	serverFourRepo := db.NewDb()
 	serverFiveRepo := db.NewDb()
 
-	serverOne, _ := NewRaftServer(serverOneId, serverOneDataFolder, 9001, serverOneRepo)
+	serverOne, _ := NewRaftServer(serverOneId, serverOneDataFolder, "localhost", 9001, serverOneRepo)
 
 	time.Sleep(time.Second * 2)
 
-	NewRaftServer(serverTwoId, serverTwoDataFolder, 9002, serverTwoRepo)
-	NewRaftServer(serverThreeId, serverThreeDataFolder, 9003, serverThreeRepo)
-	NewRaftServer(serverFourId, serverFourDataFolder, 9004, serverFourRepo)
-	NewRaftServer(serverFiveId, serverFiveDataFolder, 9005, serverFiveRepo)
+	NewRaftServer(serverTwoId, serverTwoDataFolder, "localhost", 9002, serverTwoRepo)
+	NewRaftServer(serverThreeId, serverThreeDataFolder, "localhost", 9003, serverThreeRepo)
+	NewRaftServer(serverFourId, serverFourDataFolder, "localhost", 9004, serverFourRepo)
+	NewRaftServer(serverFiveId, serverFiveDataFolder, "localhost", 9005, serverFiveRepo)
 
 	f := serverOne.AddVoter(raft.ServerID(serverTwoId), raft.ServerAddress("localhost:9002"), 0, 0)
 
