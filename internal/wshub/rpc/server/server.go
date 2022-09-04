@@ -29,8 +29,8 @@ func (h *HubRpc) MessageToUserHandler(data []byte, ack *bool) error {
 	return nil
 }
 
-func ListenAndServeHubRpc(port uint, handler func(userId string, message []byte) error) {
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("localhost:%d", port))
+func ListenAndServeHubRpc(ip string, port uint, handler func(userId string, message []byte) error) {
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", ip, port))
 
 	if err != nil {
 		log.Fatal(err)

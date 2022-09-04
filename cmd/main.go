@@ -69,17 +69,27 @@ func main() {
 		os.Exit(1)
 	}
 
+	var sMembers []string = nil
+
+	if *SerfMember != "" {
+		sMembers = []string{*SerfMember}
+	}
+
 	config := agent.AgentConfiguration{
+		HttpPort:          *HttpPort,
 		RepositoryRpcPort: *RepoRpcPort,
 		HubRpcPort:        *HubRpcPort,
 		RaftPort:          *RaftPort,
 		SerfPort:          *SerfPort,
-		SerfMembers:       []string{*SerfMember},
+		SerfMembers:       sMembers,
 	}
 
 	a, err := agent.NewAgent(config)
 
 	if err != nil {
+		log.Error().
+			Err(err).
+			Msg("Error creating agent")
 		os.Exit(1)
 	}
 

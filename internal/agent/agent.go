@@ -39,13 +39,13 @@ func NewAgent(config AgentConfiguration) (*Agent, error) {
 	}
 
 	nodeId := uuid.New()
-	repo, err := repository.NewRepository(nodeId.String(), config.RaftPort, config.RepositoryRpcPort)
+	repo, err := repository.NewRepository(nodeId.String(), localIp, config.RaftPort, config.RepositoryRpcPort)
 
 	if err != nil {
 		return nil, err
 	}
 
-	wshub := wshub.NewHub(nodeId.String(), config.HubRpcPort, repo)
+	wshub := wshub.NewHub(nodeId.String(), localIp, config.HubRpcPort, repo)
 
 	joinFunc := func(np *discovery.NodeProps) {
 		repo.AddNode(np.NodeId.String(), np.NodeIp, np.RaftPort, np.RepositoryRpcPort)

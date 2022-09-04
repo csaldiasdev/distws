@@ -32,7 +32,7 @@ const (
 	raftLogCacheSize = 512
 )
 
-func NewRaftServer(svrId string, dataDir string, port uint, d *db.MemoryDb) (*raft.Raft, error) {
+func NewRaftServer(svrId string, dataDir string, ip string, port uint, d *db.MemoryDb) (*raft.Raft, error) {
 	raftConf := raft.DefaultConfig()
 	raftConf.LocalID = raft.ServerID(svrId)
 	raftConf.SnapshotThreshold = 1024
@@ -57,7 +57,7 @@ func NewRaftServer(svrId string, dataDir string, port uint, d *db.MemoryDb) (*ra
 		return nil, err
 	}
 
-	addr := fmt.Sprintf("localhost:%d", port)
+	addr := fmt.Sprintf("%s:%d", ip, port)
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", addr)
 	if err != nil {

@@ -14,6 +14,7 @@ const nodePropsKey = "node_props"
 
 type config struct {
 	NodePort       uint
+	NodeIp         string
 	Tags           map[string]string
 	StartJoinAddrs []string
 }
@@ -90,7 +91,7 @@ func (m *Membership) eventHandler() {
 }
 
 func (m *Membership) setupSerf() (err error) {
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("127.0.0.1:%d", m.NodePort))
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", m.NodeIp, m.NodePort))
 
 	if err != nil {
 		return err
@@ -134,6 +135,7 @@ func NewMembership(nodePort uint, props NodeProps, handleJoinFunc func(*NodeProp
 	c := &Membership{
 		config: config{
 			NodePort:       nodePort,
+			NodeIp:         props.NodeIp,
 			Tags:           map[string]string{nodePropsKey: sEnc},
 			StartJoinAddrs: StartJoinAddrs,
 		},

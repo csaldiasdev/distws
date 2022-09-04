@@ -35,7 +35,7 @@ type registerConnection struct {
 	conn         WsConnection
 }
 
-func NewHub(id string, rpcPort uint, repo repository.Repository) *Hub {
+func NewHub(id string, ip string, rpcPort uint, repo repository.Repository) *Hub {
 	h := &Hub{
 		nodeId:                  id,
 		repository:              repo,
@@ -48,7 +48,7 @@ func NewHub(id string, rpcPort uint, repo repository.Repository) *Hub {
 
 	h.run()
 
-	server.ListenAndServeHubRpc(rpcPort, func(userId string, message []byte) error {
+	go server.ListenAndServeHubRpc(ip, rpcPort, func(userId string, message []byte) error {
 
 		refConnections, err := h.repository.GetByUserId(uuid.MustParse(userId))
 

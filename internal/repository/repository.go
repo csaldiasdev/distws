@@ -148,19 +148,19 @@ func (r *inMemoryRepository) AddNode(nodeId string, ip string, raftPort uint, rp
 	return nil
 }
 
-func NewRepository(nodeId string, raftPort uint, rpcPort uint) (Repository, error) {
+func NewRepository(nodeId string, nodeIp string, raftPort uint, rpcPort uint) (Repository, error) {
 	baseFolder := fmt.Sprintf("raft-data/node-%s", nodeId)
 
 	os.MkdirAll(baseFolder, 0777)
 
 	memoryDb := db.NewDb()
-	raftNode, err := stateRaft.NewRaftServer(nodeId, baseFolder, raftPort, memoryDb)
+	raftNode, err := stateRaft.NewRaftServer(nodeId, baseFolder, nodeIp, raftPort, memoryDb)
 
 	if err != nil {
 		return nil, err
 	}
 
-	go server.ListenAndServeRepositoryRpc(rpcPort, raftNode)
+	go server.ListenAndServeRepositoryRpc(nodeIp, rpcPort, raftNode)
 
 	return &inMemoryRepository{
 		nodeId:   nodeId,
