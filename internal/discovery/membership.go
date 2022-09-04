@@ -13,16 +13,17 @@ import (
 const nodePropsKey = "node_props"
 
 type config struct {
-	NodePort       int
+	NodePort       uint
 	Tags           map[string]string
 	StartJoinAddrs []string
 }
 
 type NodeProps struct {
-	NodeIp   string    `json:"node_ip"`
-	NodeId   uuid.UUID `json:"node_id"`
-	GrpcPort int       `json:"grpc_port"`
-	RaftPort int       `json:"raft_port"`
+	NodeIp            string    `json:"node_ip"`
+	NodeId            uuid.UUID `json:"node_id"`
+	RepositoryRpcPort uint      `json:"repository_rpc_port"`
+	HubRpcPort        uint      `json:"hub_rpc_port"`
+	RaftPort          uint      `json:"raft_port"`
 }
 
 type Membership struct {
@@ -124,7 +125,7 @@ func (m *Membership) setupSerf() (err error) {
 	return nil
 }
 
-func NewMembership(nodePort int, props NodeProps, handleJoinFunc func(*NodeProps), handleLeaveFunc func(*NodeProps), StartJoinAddrs ...string) (*Membership, error) {
+func NewMembership(nodePort uint, props NodeProps, handleJoinFunc func(*NodeProps), handleLeaveFunc func(*NodeProps), StartJoinAddrs ...string) (*Membership, error) {
 
 	bytesProps, _ := json.Marshal(props)
 
