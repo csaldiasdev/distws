@@ -2,20 +2,20 @@
 
 ## Running service
 ```bash
-# Node 1
-go run ./cmd/main.go --httpPort 10000 --repoRpcPort 10001 --hubRpcPort 10002 --raftPort 10003 --serfPort 10004
+# Node 1 | --httpPort 10000 --repoRpcPort 10001 --hubRpcPort 10002 --raftPort 10003 --serfPort 10004
+make run-server-1
 
-# Node 2
-go run ./cmd/main.go --httpPort 20000 --repoRpcPort 20001 --hubRpcPort 20002 --raftPort 20003 --serfPort 20004 --member "localhost:10004"
+# Node 2 | --httpPort 20000 --repoRpcPort 20001 --hubRpcPort 20002 --raftPort 20003 --serfPort 20004 --member "$(LOCAL_IP):10004"
+make run-server-2
 
-# Node 3
-go run ./cmd/main.go --httpPort 30000 --repoRpcPort 30001 --hubRpcPort 30002 --raftPort 30003 --serfPort 30004 --member "localhost:10004"
+# Node 3 | --httpPort 30000 --repoRpcPort 30001 --hubRpcPort 30002 --raftPort 30003 --serfPort 30004 --member "$(LOCAL_IP):10004"
+make run-server-3
 
-# Node 4
-go run ./cmd/main.go --httpPort 40000 --repoRpcPort 40001 --hubRpcPort 40002 --raftPort 40003 --serfPort 40004 --member "localhost:10004"
+# Node 4 | --httpPort 40000 --repoRpcPort 40001 --hubRpcPort 40002 --raftPort 40003 --serfPort 40004 --member "$(LOCAL_IP):10004"
+make run-server-4
 
-# Node 5
-go run ./cmd/main.go --httpPort 50000 --repoRpcPort 50001 --hubRpcPort 50002 --raftPort 50003 --serfPort 50004 --member "localhost:10004"
+# Node 5 | --httpPort 50000 --repoRpcPort 50001 --hubRpcPort 50002 --raftPort 50003 --serfPort 50004 --member "$(LOCAL_IP):10004"
+make run-server-5
 ```
 ## API
 
