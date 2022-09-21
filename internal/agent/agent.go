@@ -52,7 +52,9 @@ func NewAgent(config AgentConfiguration) (*Agent, error) {
 		wshub.AddHubNode(np.NodeId.String(), np.NodeIp, np.HubRpcPort)
 	}
 
-	leaveFunc := func(np *discovery.NodeProps) {}
+	leaveFunc := func(np *discovery.NodeProps) {
+		repo.RemoveNode(np.NodeId.String())
+	}
 
 	nodeMember, err := discovery.NewMembership(config.SerfPort, discovery.NodeProps{
 		NodeIp:            localIp,

@@ -24,6 +24,7 @@ type Repository interface {
 	DeleteConnection(connectionId uuid.UUID) error
 	DeleteAllInNode(nodeId uuid.UUID) error
 	AddNode(nodeId string, ip string, raftPort uint, rpcPort uint) error
+	RemoveNode(nodeId string) error
 }
 
 type inMemoryRepository struct {
@@ -144,6 +145,15 @@ func (r *inMemoryRepository) AddNode(nodeId string, ip string, raftPort uint, rp
 	}
 
 	r.rpcNodes[nodeId] = cli
+
+	return nil
+}
+
+func (r *inMemoryRepository) RemoveNode(nodeId string) error {
+	if r.raftNode.State() == raft.Leader {
+		r.raftNode.DemoteVoter(raft.ServerID(nodeId), 0, 0)
+		r.raftNode.RemoveServer(raft.ServerID(nodeId), 0, 0)
+	}
 
 	return nil
 }
