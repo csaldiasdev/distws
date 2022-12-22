@@ -17,6 +17,29 @@ const (
 	nodeIdFieldName     = "NodeId"
 )
 
+var memoryDbSchema = &memdb.DBSchema{
+	Tables: map[string]*memdb.TableSchema{
+		connectionTableName: {
+			Name: connectionTableName,
+			Indexes: map[string]*memdb.IndexSchema{
+				idIndexName: {
+					Name:    idIndexName,
+					Unique:  true,
+					Indexer: &memdb.StringFieldIndex{Field: idIndexFieldName},
+				},
+				userIdIndexName: {
+					Name:    userIdIndexName,
+					Indexer: &memdb.StringFieldIndex{Field: userIdFieldName},
+				},
+				nodeIdIndexName: {
+					Name:    nodeIdIndexName,
+					Indexer: &memdb.StringFieldIndex{Field: nodeIdFieldName},
+				},
+			},
+		},
+	},
+}
+
 type MemoryDb struct {
 	database *memdb.MemDB
 }
@@ -87,28 +110,7 @@ func (m *MemoryDb) DeleteAllInNode(nodeId uuid.UUID) error {
 }
 
 func NewDb() *MemoryDb {
-	schema := &memdb.DBSchema{
-		Tables: map[string]*memdb.TableSchema{
-			connectionTableName: {
-				Name: connectionTableName,
-				Indexes: map[string]*memdb.IndexSchema{
-					idIndexName: {
-						Name:    idIndexName,
-						Unique:  true,
-						Indexer: &memdb.StringFieldIndex{Field: idIndexFieldName},
-					},
-					userIdIndexName: {
-						Name:    userIdIndexName,
-						Indexer: &memdb.StringFieldIndex{Field: userIdFieldName},
-					},
-					nodeIdIndexName: {
-						Name:    nodeIdIndexName,
-						Indexer: &memdb.StringFieldIndex{Field: nodeIdFieldName},
-					},
-				},
-			},
-		},
-	}
+	schema := memoryDbSchema
 
 	memdb, _ := memdb.NewMemDB(schema)
 
