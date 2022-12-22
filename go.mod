@@ -3,9 +3,9 @@ module github.com/csaldiasdev/distws
 go 1.19
 
 require (
+	github.com/go-chi/chi/v5 v5.0.8
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.3.0
-	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/hashicorp/go-memdb v1.3.3
 	github.com/hashicorp/raft v1.3.10

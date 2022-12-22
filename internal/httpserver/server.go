@@ -6,9 +6,9 @@ import (
 
 	"github.com/csaldiasdev/distws/internal/httpserver/jwt"
 	"github.com/csaldiasdev/distws/internal/wshub"
+	"github.com/go-chi/chi/v5"
 
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog/log"
 )
@@ -39,12 +39,9 @@ func (s *httpServer) handleRoot(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *httpServer) handleMessageToUser(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
 
-	vars := mux.Vars(r)
-
-	stringUserId := vars["id"]
-
-	userId, err := uuid.Parse(stringUserId)
+	userId, err := uuid.Parse(id)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -100,13 +97,13 @@ func NewHTTPServer(hub *wshub.Hub) *http.Server {
 		jwtSecret: "distributedws",
 	}
 
-	r := mux.NewRouter()
+	chiRouter := chi.NewRouter()
 
-	r.HandleFunc("/", httpsvr.handleRoot).Methods(http.MethodGet)
-	r.HandleFunc("/api/user/{id}/message", httpsvr.handleMessageToUser).Methods(http.MethodPost)
-	r.HandleFunc("/ws", httpsvr.handleWs).Methods(http.MethodGet)
+	chiRouter.Get("/", httpsvr.handleRoot)
+	chiRouter.Post("/api/user/{id}/message", httpsvr.handleMessageToUser)
+	chiRouter.Get("/ws", httpsvr.handleWs)
 
 	return &http.Server{
-		Handler: r,
+		Handler: chiRouter,
 	}
 }
