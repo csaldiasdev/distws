@@ -1,5 +1,6 @@
 SERVER_MAIN_GOFILE_PATH = ./cmd/server/main.go
 GET_IP_GOFILE_PATH = ./cmd/getip/main.go
+WSCLI_GOFILE_PATH = ./cmd/wscli/main.go
 EXECUTABLE_PATH = bin/distws
 LOCAL_IP = $(shell go run $(GET_IP_GOFILE_PATH))
 
@@ -14,6 +15,9 @@ run-load-balancer-with-5-nodes:
 
 build-server:
 	go build -o $(EXECUTABLE_PATH) $(SERVER_MAIN_GOFILE_PATH)
+
+run-ws-client:
+	go run $(WSCLI_GOFILE_PATH) --t $(token)
 
 go-run-server-1:
 	go run $(SERVER_MAIN_GOFILE_PATH) --httpPort 10000 --repoRpcPort 10001 --hubRpcPort 10002 --raftPort 10003 --serfPort 10004
@@ -47,19 +51,19 @@ run-server-5:
 	./$(EXECUTABLE_PATH) --httpPort 50000 --repoRpcPort 50001 --hubRpcPort 50002 --raftPort 50003 --serfPort 50004 --member "$(LOCAL_IP):10004"
 
 connect-user-1:
-	wscat -c "localhost:60000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjRmOGFjNGNhM2FjMDQ3YzY4NzhkYTg1YTI0YTI2ZWQ4IiwibmFtZSI6IlVzZXIgT25lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pQSgLenK_tRKQeKB9XduFy8iXSlQBbZzUg1y2F9Fy-4"
+	go run $(WSCLI_GOFILE_PATH) --t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjRmOGFjNGNhM2FjMDQ3YzY4NzhkYTg1YTI0YTI2ZWQ4IiwibmFtZSI6IlVzZXIgT25lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pQSgLenK_tRKQeKB9XduFy8iXSlQBbZzUg1y2F9Fy-4
 
 connect-user-2:
-	wscat -c "localhost:60000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjJjNDIxN2MzZGVmNDRiM2ZiNWNmZGNiZDNmM2Q0N2M1IiwibmFtZSI6IlVzZXIgVHdvIiwiaWF0IjoxNTE2MjM5MDIyfQ.21eDhv7CawhMllxWrDgDpkiaEA23c8hyEQkcvLsocGU"
+	go run $(WSCLI_GOFILE_PATH) --t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjJjNDIxN2MzZGVmNDRiM2ZiNWNmZGNiZDNmM2Q0N2M1IiwibmFtZSI6IlVzZXIgVHdvIiwiaWF0IjoxNTE2MjM5MDIyfQ.21eDhv7CawhMllxWrDgDpkiaEA23c8hyEQkcvLsocGU
 
 connect-user-3:
-	wscat -c "localhost:60000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjBiNzM2Njc4YTMxZjRkYjM5MjE3Mzc0N2U0Yzg4Yjc2IiwibmFtZSI6IlVzZXIgVGhyZWUiLCJpYXQiOjE1MTYyMzkwMjJ9.PuHqEycwze0usAQFWHpdilCRhUbE0dKQS2Tl8LwrqUU"
+	go run $(WSCLI_GOFILE_PATH) --t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjBiNzM2Njc4YTMxZjRkYjM5MjE3Mzc0N2U0Yzg4Yjc2IiwibmFtZSI6IlVzZXIgVGhyZWUiLCJpYXQiOjE1MTYyMzkwMjJ9.PuHqEycwze0usAQFWHpdilCRhUbE0dKQS2Tl8LwrqUU
 
 connect-user-4:
-	wscat -c "localhost:60000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6ImNhMTY3NTA3NWMwNjQ0NDFhMzBjNjc3YWFjODg3MDg1IiwibmFtZSI6IlVzZXIgRm91ciIsImlhdCI6MTUxNjIzOTAyMn0.84bwBBJQ6Iqi28C1yyKxXAAtRvb_LsHnsM_qK60oIog"
+	go run $(WSCLI_GOFILE_PATH) --t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6ImNhMTY3NTA3NWMwNjQ0NDFhMzBjNjc3YWFjODg3MDg1IiwibmFtZSI6IlVzZXIgRm91ciIsImlhdCI6MTUxNjIzOTAyMn0.84bwBBJQ6Iqi28C1yyKxXAAtRvb_LsHnsM_qK60oIog
 
 connect-user-5:
-	wscat -c "localhost:60000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjdiY2M3NzNkMDg2YTQ4YWFiODY0Yjg1NTUzMGJhNzg2IiwibmFtZSI6IlVzZXIgRml2ZSIsImlhdCI6MTUxNjIzOTAyMn0.c992IqwXpGJYqTF6c7cAwvWQi7-XQoaY0IQ3mMciaWI"
+	go run $(WSCLI_GOFILE_PATH) --t eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjdiY2M3NzNkMDg2YTQ4YWFiODY0Yjg1NTUzMGJhNzg2IiwibmFtZSI6IlVzZXIgRml2ZSIsImlhdCI6MTUxNjIzOTAyMn0.c992IqwXpGJYqTF6c7cAwvWQi7-XQoaY0IQ3mMciaWI
 
 message-to-user-1:
 	curl -H "Content-type: application/json" -d '{"message": "$(msg)"}' 'http://localhost:60000/api/user/4f8ac4ca3ac047c6878da85a24a26ed8/message'

@@ -22,6 +22,17 @@
                 "10004"
             ],
             "program": "${workspaceFolder}/cmd/"
+        },
+        {
+            "name": "Debug WS Client",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "args": [
+                "--t",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjRmOGFjNGNhM2FjMDQ3YzY4NzhkYTg1YTI0YTI2ZWQ4IiwibmFtZSI6IlVzZXIgT25lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pQSgLenK_tRKQeKB9XduFy8iXSlQBbZzUg1y2F9Fy-4",
+            ],
+            "program": "${workspaceFolder}/cmd/wscli/"
         }
     ]
 }

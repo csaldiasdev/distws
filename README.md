@@ -38,9 +38,9 @@ curl -H "Content-type: application/json" -d '{"message": "MESSAGE FOR USER"}' 'h
 ```
 
 ## Websocket
->Connection example (with wscat)
+>Connection example
 ```bash
-wscat -c "localhost:10000/ws?token=<JWT>"
+go run ./cmd/wscli/main.go --t <JWT>
 ```
 ## JWT
 
@@ -56,17 +56,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN
 ```bash
 # WS connection example (with makefile)
 make connect-user-1
-
-# WS connection example
-wscat -c "localhost:10000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjRmOGFjNGNhM2FjMDQ3YzY4NzhkYTg1YTI0YTI2ZWQ4IiwibmFtZSI6IlVzZXIgT25lIiwiaWF0IjoxNTE2MjM5MDIyfQ.pQSgLenK_tRKQeKB9XduFy8iXSlQBbZzUg1y2F9Fy-4"
 ```
 
 ```bash
 # Message to user (with makefile)
 make message-to-user-1 msg=MESSAGE_TO_USER
-
-# Message to user
-curl -H "Content-type: application/json" -d '{"message": "MESSAGE_TO_USER"}' 'http://localhost:10000/api/user/4f8ac4ca3ac047c6878da85a24a26ed8/message'
 ```
 
 >User Two | 2c4217c3def44b3fb5cfdcbd3f3d47c5
@@ -78,17 +72,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN
 ```bash
 # WS connection example (with makefile)
 make connect-user-2
-
-# WS connection example
-wscat -c "localhost:10000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjJjNDIxN2MzZGVmNDRiM2ZiNWNmZGNiZDNmM2Q0N2M1IiwibmFtZSI6IlVzZXIgVHdvIiwiaWF0IjoxNTE2MjM5MDIyfQ.21eDhv7CawhMllxWrDgDpkiaEA23c8hyEQkcvLsocGU"
 ```
 
 ```bash
 # Message to user (with makefile)
 make message-to-user-2 msg=MESSAGE_TO_USER
-
-# Message to user
-curl -H "Content-type: application/json" -d '{"message": "MESSAGE_TO_USER"}' 'http://localhost:10000/api/user/2c4217c3def44b3fb5cfdcbd3f3d47c5/message'
 ```
 
 >User Three | 0b736678a31f4db392173747e4c88b76
@@ -100,17 +88,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN
 ```bash
 # WS connection example (with makefile)
 make connect-user-3
-
-# WS connection example
-wscat -c "localhost:10000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjBiNzM2Njc4YTMxZjRkYjM5MjE3Mzc0N2U0Yzg4Yjc2IiwibmFtZSI6IlVzZXIgVGhyZWUiLCJpYXQiOjE1MTYyMzkwMjJ9.PuHqEycwze0usAQFWHpdilCRhUbE0dKQS2Tl8LwrqUU"
 ```
 
 ```bash
 # Message to user (with makefile)
 make message-to-user-3 msg=MESSAGE_TO_USER
-
-# Message to user
-curl -H "Content-type: application/json" -d '{"message": "MESSAGE_TO_USER"}' 'http://localhost:10000/api/user/0b736678a31f4db392173747e4c88b76/message'
 ```
 
 >User Four | ca1675075c064441a30c677aac887085
@@ -122,17 +104,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN
 ```bash
 # WS connection example (with makefile)
 make connect-user-4
-
-# WS connection example
-wscat -c "localhost:10000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6ImNhMTY3NTA3NWMwNjQ0NDFhMzBjNjc3YWFjODg3MDg1IiwibmFtZSI6IlVzZXIgRm91ciIsImlhdCI6MTUxNjIzOTAyMn0.84bwBBJQ6Iqi28C1yyKxXAAtRvb_LsHnsM_qK60oIog"
 ```
 
 ```bash
 # Message to user (with makefile)
 make message-to-user-4 msg=MESSAGE_TO_USER
-
-# Message to user
-curl -H "Content-type: application/json" -d '{"message": "MESSAGE_TO_USER"}' 'http://localhost:10000/api/user/ca1675075c064441a30c677aac887085/message'
 ```
 
 >User Five | 7bcc773d086a48aab864b855530ba786
@@ -144,15 +120,9 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN
 ```bash
 # WS connection example (with makefile)
 make connect-user-5
-
-# WS connection example
-wscat -c "localhost:10000/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vZGlzdHJpYnV0ZWR3cyIsInN1YiI6IjdiY2M3NzNkMDg2YTQ4YWFiODY0Yjg1NTUzMGJhNzg2IiwibmFtZSI6IlVzZXIgRml2ZSIsImlhdCI6MTUxNjIzOTAyMn0.c992IqwXpGJYqTF6c7cAwvWQi7-XQoaY0IQ3mMciaWI"
 ```
 
 ```bash
 # Message to user (with makefile)
 make message-to-user-5 msg=MESSAGE_TO_USER
-
-# Message to user
-curl -H "Content-type: application/json" -d '{"message": "MESSAGE_TO_USER"}' 'http://localhost:10000/api/user/7bcc773d086a48aab864b855530ba786/message'
 ```
