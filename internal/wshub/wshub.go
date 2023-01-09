@@ -86,6 +86,7 @@ func (h *Hub) AddHubNode(nodeId string, ip string, rpcPort uint) error {
 func (h *Hub) AddWebSocketConnection(wsConn *websocket.Conn, userId uuid.UUID) {
 	conn, id := NewConnection(wsConn, h.unRegisterChan)
 	h.registerChan <- registerConnection{conn: conn, connectionId: id, userId: userId}
+	conn.SendMessage([]byte(fmt.Sprintf("CONNECTED FROM NODE: %s", h.nodeId)))
 }
 
 func (h *Hub) MessageToUser(userId uuid.UUID, byteMsg []byte) error {
